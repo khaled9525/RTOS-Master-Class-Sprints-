@@ -73,52 +73,8 @@
 
 /* Constants for the ComTest demo application tasks. */
 #define mainCOM_TEST_BAUD_RATE	( ( unsigned long ) 115200 )
-/*Handlers of diffrent tasks */
-	
-TaskHandle_t led_Toggle_task_handler = NULL;
-TaskHandle_t button_read_task_handler=NULL;
-	
-unsigned char counter =0;
-/***Tasks Definitions***/
-
-static pinState_t button_state=PIN_IS_LOW;
-static pinState_t state=PIN_IS_LOW;
 
 
-void Led_Toggle_task(void * pvParameters )
-{
-
-	for(;;)
-	{
-		
-
-
-
-
- state^=1;
-GPIO_write(PORT_0,PIN1,state);
-
-vTaskDelay(10);
-		
-		
-		}
-
-}
-void button_read_task(void * pvParameters )
-{
-	for(;;)
-	{
-	if(GPIO_read(PORT_0,PIN0))
-	{
-		while(GPIO_read(PORT_0,PIN0)==1);
-		button_state=PIN_IS_LOW;
-			vTaskDelay(10);	
-
-	}
-	
-	}
-
-}
 /*
  * Configure the processor for use with the Keil demo board.  This is very
  * minimal as most of the setup is managed by the settings in the project
@@ -134,31 +90,13 @@ static void prvSetupHardware( void );
  */
 int main( void )
 {
-
-
 	/* Setup the hardware for use with the Keil demo board. */
 	prvSetupHardware();
 
 	
     /* Create Tasks here */
- 
-
-xTaskCreate(
-                   Led_Toggle_task,       /* Function that implements the task. */
-                    "Led_Toggle_task",          /* Text name for the task. */
-                    20,      /* Stack size in words, not bytes. */
-                    ( void * ) 1,    /* Parameter passed into the task. */
-                    1,/* Priority at which the task is created. */
-                    &led_Toggle_task_handler );      /* Used to pass out the created task's handle. */		
 
 
-xTaskCreate(
-                   button_read_task,       /* Function that implements the task. */
-                    "button_read_task",          /* Text name for the task. */
-                    20,      /* Stack size in words, not bytes. */
-                    ( void * ) 1,    /* Parameter passed into the task. */
-                    1,/* Priority at which the task is created. */
-                    &button_read_task_handler );      /* Used to pass out the created task's handle. */												
 	/* Now all the tasks have been started - start the scheduler.
 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
